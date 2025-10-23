@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Interger, String, Text, Date, Float
+from sqlalchemy import Column, Integer, String, Text, Date, Float
 from app.database.connection import Base
 
 
@@ -7,7 +7,7 @@ from app.database.connection import Base
 class Document(Base):
     __tablename__ = "documents"
     #define estrutura da tabela, tipos de dados e constraints.
-    id = Column(Interger, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     titulo = Column(String(255), nullable=False)
     autor = Column(String(255), nullable=True)
     conteudo = Column(Text, nullable=False)
