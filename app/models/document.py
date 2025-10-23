@@ -6,7 +6,7 @@ from app.database.connection import Base
 #Criar uma classe para definir os dados dentro de uma tabela do banco
 class Document(Base):
     __tablename__ = "documents"
-    
+    #define estrutura da tabela, tipos de dados e constraints.
     id = Column(Interger, primary_key=True, index=True)
     titulo = Column(String(255), nullable=False)
     autor = Column(String(255), nullable=True)
