@@ -20,7 +20,7 @@ def search_documents(palavraChave=None, busca=None, latitude=None, longitude=Non
     try:
         q = db.query(Document)
         if busca:
-            term = f"%{busca}"
+            term = f"%{busca}%"
             q = q.filter(
                 or_(
                     Document.titulo.ilike(term),
@@ -29,7 +29,7 @@ def search_documents(palavraChave=None, busca=None, latitude=None, longitude=Non
                 )
             )
         elif palavraChave:
-            term = f"%{palavraChave}"
+            term = f"%{palavraChave}%"
             q = q.filter(
                 or_(
                     Document.titulo.ilike(term),
