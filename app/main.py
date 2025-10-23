@@ -1,12 +1,15 @@
-from flask import Flask, jsonify
+from flask import Flask
+from app.routes.document_routes import bp as document_bp
+from app.database.connection import engine, Base
 
 
-main = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    app.register_blueprint(document_bp)
+    Base.metadata.create_all(bind=engine)
+    return app
+app = create_app()
 
-@main.route('/')
-def home():
-    return jsonify({"Mensagem": "Flask rodando com sucesso"})
 
-
-if __name__ =='__main__':
-    main.run(debug=True)
+if __name__=="__main__":
+    app.run(debug=True, host="0.0.0.0", port=5000)
