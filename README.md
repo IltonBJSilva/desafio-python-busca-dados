@@ -79,6 +79,10 @@ desafio-python-busca-dados/
 
 ##### Siga os passos abaixo para executar o projeto.
 
+* Certifique-se de ter **Python** e **Git** instalados.
+
+* Caso ocorra algum erro de módulo, rode `pip install nome-do-modulo`.
+
 1. **Clone o repositório:**
    **Bash**
 
