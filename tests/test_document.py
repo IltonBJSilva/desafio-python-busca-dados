@@ -119,3 +119,13 @@ def test_create_document_invalid_data():
             }
         )
 
+
+def test_sql_injection_attempt(db):
+    create_document({
+        "titulo": "Teste Seguro",
+        "autor": "Admin",
+        "conteudo": "Nada suspeito",
+        "data":date.today()
+    })
+    results = search_documents(busca="' OR 1=1 --")
+    assert len(results) == 0 #Não pode trazer tudo
