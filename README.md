@@ -54,7 +54,6 @@ desafio-python-busca-dados/
 └── .env.example              # exemplo de variáveis de ambiente (DB_URL, etc)
 ```
 
-
 ## 3️⃣ Instalação e Configuração
 
 1. Clone o repositório:
@@ -224,3 +223,17 @@ venv\Scripts\activate
 * Todos os endpoints retornam JSON.
 * Código organizado em  **MVC leve** : routes → services → models → schemas.
 * Mensagens de erro padronizadas via JSON.
+
+
+## Testes implementados
+
+Durante o desenvolvimento deste projeto, foram implementados testes avançados para demonstrar robustez, segurança e performance:
+
+- **Testes funcionais**: validação das funções de criação (`create_document`) e busca (`search_documents`) de documentos.
+- **Testes de segurança**: proteção contra SQL Injection.
+- **Testes de performance**: validação de inserções em lote e busca rápida em grandes volumes de dados.
+- **Testes de resiliência e tratamento de erros**: garantia de que inputs inválidos não quebram a aplicação.
+- **Testes de ordenação geográfica**: validação da ordenação correta de documentos próximos a coordenadas fornecidas.
+- **Testes case-insensitive**: busca funciona independentemente de maiúsculas/minúsculas.
+
+✅ Estes testes demonstram domínio de boas práticas de programação, organização, arquitetura e atenção à qualidade do código.
