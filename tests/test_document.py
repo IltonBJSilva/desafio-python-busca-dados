@@ -143,7 +143,15 @@ def test_ordering_by_distance(db):
     results = search_documents(busca="Teste", latitude=-30.0, longitude=-51.0)
     assert results[0].titulo == "Doc 1"
 
-
+def test_rollback_on_failure(db):
+    bad_data = {"titulo": None, "autor": "João", "conteudo": "Inválido", "data":date.today()}
+    try:
+        create_document(bad_data)
+    except Exception:
+        pass
+    # Confirma que nada foi salvo
+    results = search_documents(busca="Inválido")
+    assert len(results) == 0
 
 
 
