@@ -135,3 +135,23 @@ def test_search_without_coordinates(db, sample_document):
     create_document(sample_document)
     results = search_documents(busca="carros")
     assert len(results) > 0
+
+
+def test_ordering_by_distance(db):
+    create_document({"titulo": "Doc 1", "autor": "A", "conteudo": "Teste", "latitude": -30.0, "longitude": -51.0, "data":date.today()})
+    create_document({"titulo": "Doc 2", "autor": "B", "conteudo": "Teste", "latitude": -30.1, "longitude": -51.2, "data":date.today()})
+    results = search_documents(busca="Teste", latitude=-30.0, longitude=-51.0)
+    assert results[0].titulo == "Doc 1"
+
+
+
+
+
+
+
+
+
+
+
+
+
