@@ -27,7 +27,7 @@ def sample_document():
         "conteudo": "Um encontro será realizado com carros antigos na cidade.",
         "latitude": -30.0346,
         "longitude": -51.2177,
-        "data": date(2025, 10, 24)  # <--- aqui é um datetime.date
+        "data": date(2025, 10, 24) 
     }   
 
 # ------------------------
@@ -40,7 +40,14 @@ def test_create_document(db, sample_document):
     assert doc.autor == sample_document["autor"]
 
 
-
+# ------------------------
+# Testes de busca
+# ------------------------
+def test_search_by_titulo(db, sample_document):
+    create_document(sample_document)
+    results = search_documents(busca="carros antigos")
+    assert len(results) > 0
+    assert any("Carros antigos" in d.titulo for d in results)
 
 
 
