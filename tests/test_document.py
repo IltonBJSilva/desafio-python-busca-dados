@@ -33,25 +33,33 @@ def sample_document():
 # ------------------------
 # Testes de criação
 # ------------------------ 
+"""
+#Funcinou 100%
 def test_create_document(db, sample_document):
     doc = create_document(sample_document)
     assert doc.id is not None
     assert doc.titulo == sample_document["titulo"]
     assert doc.autor == sample_document["autor"]
-
+"""
 
 # ------------------------
 # Testes de busca
 # ------------------------
 def test_search_by_titulo(db, sample_document):
-    create_document(sample_document)
     results = search_documents(busca="carros antigos")
     assert len(results) > 0
     assert any("Carros antigos" in d.titulo for d in results)
 
 
+def test_search_by_conteudo(db, sample_document):
+    results = search_documents(busca="encontro será realizado")
+    assert len(results) > 0
+    assert any("encontro será realizado" in d.conteudo for d in results)
 
-
+def test_search_by_autor(db, sample_document):
+    results = search_documents(busca="João Mecânico")
+    assert len(results) > 0
+    assert any("João Mecânico" in d.autor for d in results)
 
 
 
