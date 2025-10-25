@@ -70,8 +70,14 @@ def test_search_no_results(db):
     assert len(results) == 0
 
 
-
-
+# ------------------------
+# Teste busca com coordenadas
+# ------------------------
+def test_search_with_coordinates(db, sample_document):
+    results = search_documents(busca="carros", latitude=-30.0346, longitude=-51.2177)
+    assert len(results) > 0
+    #Verificar se a primeira posição é o documento mais proximo
+    assert results[0].titulo == sample_document["titulo"]
 
 
 
