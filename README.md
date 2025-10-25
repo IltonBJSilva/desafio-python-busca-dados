@@ -203,6 +203,52 @@ http://127.0.0.1:5000/documentos?palavraChave=carros&latitude=-30.0300&longitude
 * É obrigatório fornecer `palavraChave` ou `busca`.
 * Se `latitude` for fornecida, `longitude` também deve ser, para que a ordenação por proximidade funcione.
 
+A solução implementa todas as funcionalidades solicitadas no desafio:
+
+* **Criação de Documentos:** Endpoint `POST /documentos` para persistir novos documentos em um banco de dados relacional.
+* **Busca por Palavra-Chave:** O endpoint `GET /documentos` permite a busca por uma palavra-chave no título, conteúdo ou autor do documento.
+* **[Bônus 1] Ordenação por Localização:** A busca pode ser refinada com os parâmetros `latitude` e `longitude`, que ordenam os resultados do mais próximo ao mais distante, utilizando a fórmula de **Haversine** para precisão.
+* **[Bônus 2] Busca por Expressões (Frases Inteiras):** A lógica de busca foi aprimorada para aceitar **frases completas** (e não apenas uma palavra), de modo semelhante ao Google.
+
+  Agora, a API busca a **expressão exata** dentro dos campos `titulo`, `conteudo` e `autor`, retornando todos os documentos que contenham a frase informada.
+
+---
+
+**Requisição:**
+
+<pre class="overflow-visible!" data-start="1152" data-end="1212"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span><span>GET /documentos?busca=Carros+antigos+em+porto+alegre
+</span></span></code></div></div></pre>
+
+**Resposta:**
+
+**JSON**
+
+```
+[
+  {
+    "titulo": "Novo encontro de Antiguidades!",
+    "autor": "João Mecânico",
+    "conteudo": "Nessa sexta-feira (08), acontecerá o encontro de histórico carros antigos na cidade de Porto Alegre. Todos são bem-vindos!",
+    "data": "2025-01-01"
+  },
+  {
+    "titulo": "Carros antigos em Porto Alegre",
+    "autor": "Maria Historiadora",
+    "conteudo": "Um evento sobre a história dos veículos clássicos no RS.",
+    "data": "2024-12-15"
+  }
+]
+```
+
+---
+
+### ⚙️ Como Funciona
+
+* A busca por frases utiliza o operador SQL `LIKE '%<frase>%'` em múltiplos campos (`titulo`, `conteudo`, `autor`);
+* A filtragem é feita de forma **case-insensitive** (ignora maiúsculas e minúsculas);
+* Pode ser combinada com **latitude** e **longitude** para ordenar os resultados por distância;
+* É  **compatível com o parâmetro `palavraChave`** , mantendo retrocompatibilidade com a versão anterior do endpoint.
+
 ---
 
 ## 6️⃣ Modelo de Dados
