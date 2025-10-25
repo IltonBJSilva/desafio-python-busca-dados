@@ -1,8 +1,8 @@
-## 📄 Desafio Técnico de Python – Microsserviço de Busca de Documentos
+# 📄 Desafio Técnico de Python – Microsserviço de Busca de Documentos
 
 ## 1️⃣ Descrição do Projeto
 
-Este microsserviço permite a criação, armazenamento e busca de documentos textuais. Foi desenvolvido em **Python 3** e utiliza um banco de dados relacional (como SQLite podendo migrar para o PostgreSQL facilmente) para persistência de dados. A aplicação oferece as seguintes funcionalidades:
+##### Este microsserviço permite a criação, armazenamento e busca de documentos textuais. Foi desenvolvido em **Python 3** e utiliza um banco de dados relacional (como SQLite podendo migrar para o PostgreSQL facilmente) para persistência de dados. A aplicação oferece as seguintes funcionalidades:
 
 * Criação de documentos através de requisições `POST`.
 * Busca de documentos por palavra-chave ou frases completas via `GET`.
@@ -11,7 +11,7 @@ Este microsserviço permite a criação, armazenamento e busca de documentos tex
 
 ## 2️⃣ Decisões de Projeto e Arquitetura
 
-Para atender aos critérios de avaliação, a arquitetura e as tecnologias foram escolhidas com foco em  **performance, manutenibilidade, escalabilidade e boas práticas de programação** .
+##### Para atender aos critérios de avaliação, a arquitetura e as tecnologias foram escolhidas com foco em  **performance, manutenibilidade, escalabilidade e boas práticas de programação** .
 
 * **Arquitetura Leve (MVC-like):** A estrutura do projeto foi organizada de forma a separar as responsabilidades, facilitando a manutenção e a legibilidade do código:
   * `routes`: Camada responsável por receber as requisições HTTP e direcioná-las.
@@ -24,7 +24,7 @@ Para atender aos critérios de avaliação, a arquitetura e as tecnologias foram
 
 ## 3️⃣ Funcionalidades Implementadas
 
-A solução implementa todas as funcionalidades solicitadas no desafio:
+##### A solução implementa todas as funcionalidades solicitadas no desafio:
 
 * **Criação de Documentos:** Endpoint `POST /documentos` para persistir novos documentos em um banco de dados relacional.
 * **Busca por Palavra-Chave:** O endpoint `GET /documentos` permite a busca por uma palavra-chave no título, conteúdo ou autor do documento.
@@ -33,7 +33,7 @@ A solução implementa todas as funcionalidades solicitadas no desafio:
 
 ## 4️⃣ Estrutura do Projeto
 
-O projeto segue uma estrutura organizada, separando as responsabilidades em diferentes módulos:
+##### O projeto segue uma estrutura organizada, separando as responsabilidades em diferentes módulos:
 
 **Bash**
 
@@ -77,7 +77,7 @@ desafio-python-busca-dados/
 
 ## 4️⃣ Instalação e Execução
 
-Siga os passos abaixo para executar o projeto.
+##### Siga os passos abaixo para executar o projeto.
 
 1. **Clone o repositório:**
    **Bash**
