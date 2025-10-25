@@ -153,6 +153,10 @@ def test_rollback_on_failure(db):
     results = search_documents(busca="Inválido")
     assert len(results) == 0
 
+def test_search_case_insensitive(db, sample_document):
+    create_document(sample_document)
+    results = search_documents(busca="CARROS ANTIGOS")
+    assert len(results) > 0
 
 
 
