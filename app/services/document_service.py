@@ -5,6 +5,19 @@ from app.utils.geo_utils import distance_km
 
 
 def create_document(data_dict):
+    """
+    Cria e persiste um novo documento no banco de dados.
+
+    Args:
+        data_dict (dict): Dicionário contendo os campos do documento
+                          Ex.: {"titulo": "...", "autor": "...", "conteudo": "...", "latitude": ..., "longitude": ...}
+
+    Returns:
+        Document: Objeto Document recém-criado e persistido no banco.
+
+    Raises:
+        sqlalchemy.exc.SQLAlchemyError: Se houver erro na operação de banco de dados.
+    """
     db = SessionLocal()
     try:
         doc = Document(**data_dict)
@@ -17,6 +30,23 @@ def create_document(data_dict):
 
 
 def search_documents(palavraChave=None, busca=None, latitude=None, longitude=None):
+    """
+    Realiza busca de documentos por palavra-chave ou texto, com opção de ordenação
+    por proximidade geográfica caso latitude e longitude sejam fornecidas.
+
+    Args:
+        palavraChave (str, opcional): Palavra-chave para buscar no título, conteúdo ou autor.
+        busca (str, opcional): Texto completo para busca.
+        latitude (float, opcional): Latitude para cálculo de proximidade.
+        longitude (float, opcional): Longitude para cálculo de proximidade.
+
+    Returns:
+        list[Document]: Lista de objetos Document que correspondem à busca,
+                        ordenados pela proximidade geográfica se latitude e longitude forem fornecidas.
+
+    Exemplo:
+        search_documents(busca="carros antigos", latitude=-30.03, longitude=-51.23)
+    """
     db = SessionLocal()
     try:
         q = db.query(Document)
