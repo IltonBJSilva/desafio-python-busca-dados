@@ -1,239 +1,239 @@
-# 📄 Documentação do Projeto – Microsserviço de Documentos
+## 📄 Desafio Técnico de Python – Microsserviço de Busca de Documentos
 
 ## 1️⃣ Descrição do Projeto
 
-O microsserviço permite criar, armazenar e buscar documentos textuais em um banco de dados tradicional (SQLite/PostgreSQL/etc.), oferecendo suporte a:
+Este microsserviço permite a criação, armazenamento e busca de documentos textuais. Foi desenvolvido em **Python 3** e utiliza um banco de dados relacional (como SQLite podendo migrar para o PostgreSQL facilmente) para persistência de dados. A aplicação oferece as seguintes funcionalidades:
 
-* Criação de documentos via POST.
-* Busca de documentos por palavra-chave ou frase completa via GET.
-* Ordenação por proximidade geográfica (latitude/longitude).
-* Persistência dos dados em banco real (não em memória).
+* Criação de documentos através de requisições `POST`.
+* Busca de documentos por palavra-chave ou frases completas via `GET`.
+* Ordenação de resultados por proximidade geográfica, utilizando latitude e longitude.
+* Persistência de dados garantida, não utilizando armazenamento em memória.
 
-O projeto é desenvolvido em  **Python 3** , utilizando  **Flask** , **SQLAlchemy** e **Marshmallow** para validação.
+## 2️⃣ Decisões de Projeto e Arquitetura
 
-## 2️⃣🗂️ Estrutura do Projeto
+Para atender aos critérios de avaliação, a arquitetura e as tecnologias foram escolhidas com foco em  **performance, manutenibilidade, escalabilidade e boas práticas de programação** .
 
-```bash
+* **Arquitetura Leve (MVC-like):** A estrutura do projeto foi organizada de forma a separar as responsabilidades, facilitando a manutenção e a legibilidade do código:
+  * `routes`: Camada responsável por receber as requisições HTTP e direcioná-las.
+  * `services`: Onde a lógica de negócio, como a busca e a ordenação, é implementada.
+  * `models`: Define a estrutura dos dados que serão persistidos no banco.
+  * `schemas`: Garante a validação e serialização dos dados, evitando a entrada de informações inválidas.
+* **Framework Flask:** Escolhido por ser um microframework leve, flexível e ideal para a construção de microsserviços. Ele permite iniciar rapidamente e adicionar extensões conforme a necessidade, sem sobrecarregar o projeto.
+* **SQLAlchemy como ORM:** Para a interação com o banco de dados, o SQLAlchemy foi a escolha principal. Ele abstrai as consultas SQL, o que previne vulnerabilidades como **SQL Injection** (um dos testes de segurança implementados) e facilita a troca do banco de dados (de SQLite para PostgreSQL, por exemplo) sem alterações na lógica de negócio.
+* **Marshmallow para Validação:** O uso do Marshmallow para definir schemas de validação garante que todos os dados recebidos pela API estejam no formato correto antes de serem processados, tornando a aplicação mais robusta e evitando erros em tempo de execução
+
+## 3️⃣ Funcionalidades Implementadas
+
+A solução implementa todas as funcionalidades solicitadas no desafio:
+
+* **Criação de Documentos:** Endpoint `POST /documentos` para persistir novos documentos em um banco de dados relacional.
+* **Busca por Palavra-Chave:** O endpoint `GET /documentos` permite a busca por uma palavra-chave no título, conteúdo ou autor do documento.
+* **[Bônus] Ordenação por Localização:** A busca pode ser refinada com os parâmetros `latitude` e `longitude`, que ordenam os resultados do mais próximo ao mais distante, utilizando a fórmula de Haversine para precisão.
+* **[Bônus] Busca por Expressões:** A lógica de busca foi aprimorada para aceitar frases completas (e não apenas uma palavra), dividindo a busca em múltiplos termos e garantindo que todos estejam presentes nos documentos retornados.
+
+## 4️⃣ Estrutura do Projeto
+
+O projeto segue uma estrutura organizada, separando as responsabilidades em diferentes módulos:
+
+**Bash**
+
+```
 desafio-python-busca-dados/
 │
 ├── app/
 │   ├── __init__.py
-│   ├── main.py              # ponto de entrada da aplicação (FastAPI, Flask, etc)
-│   ├── config.py            # configs de ambiente (DB, etc)
+│   ├── main.py              # Ponto de entrada da aplicação Flask
+│   ├── config.py            # Configurações de ambiente
 │   │
-│   ├── models/              # modelos do banco de dados
-│   │   ├── __init__.py
+│   ├── models/              # Modelos de dados do SQLAlchemy
 │   │   └── document.py
 │   │
-│   ├── schemas/             # validação (Pydantic ou Marshmallow)
-│   │   ├── __init__.py
+│   ├── schemas/             # Schemas de validação do Marshmallow
 │   │   └── document_schema.py
 │   │
-│   ├── routes/              # endpoints da API
-│   │   ├── __init__.py
+│   ├── routes/              # Definição dos endpoints da API
 │   │   └── document_routes.py
 │   │
-│   ├── services/            # lógica de negócio (busca, ordenação, etc)
-│   │   ├── __init__.py
+│   ├── services/            # Lógica de negócio da aplicação
 │   │   └── document_service.py
 │   │
-│   ├── utils/               # funções auxiliares (ex: cálculo de distância)
-│   │   ├── __init__.py
+│   ├── utils/               # Funções auxiliares
 │   │   └── geo_utils.py
 │   │
 │   └── database/
-│       ├── __init__.py
-│       └── connection.py    # conexão com o banco (SQLAlchemy, psycopg, etc)
+│       └── connection.py    # Configuração da conexão com o banco de dados
 │
-├── tests/                   # testes unitários e de integração
-│   ├── __init__.py
+├── reports/
+│   └── test_report.html
+├── tests/                   # Testes unitários e de integração
 │   └── test_document.py
 │
-├── requirements.txt          # dependências do projeto
-├── README.md                 # documentação
-└── .env.example              # exemplo de variáveis de ambiente (DB_URL, etc)
+├── requirements.txt         # Dependências do projeto
+├── README.md                # Documentação do projeto
+└── .env                     # Arquivo de configuração de ambiente
 ```
 
-## 3️⃣ Instalação e Configuração
+---
 
-1. Clone o repositório:
+## 4️⃣ Instalação e Execução
 
-<pre class="overflow-visible!" data-start="1584" data-end="1656"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-bash"><span><span>git </span><span>clone</span><span> <URL_DO_REPOSITORIO>
-</span><span>cd</span><span> desafio-python-busca-dados
-</span></span></code></div></div></pre>
+Siga os passos abaixo para executar o projeto.
 
-2. Crie e ative o ambiente virtual:
+1. **Clone o repositório:**
+   **Bash**
 
-<pre class="overflow-visible!" data-start="1694" data-end="1794"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-bash"><span><span>python -m venv venv
-</span><span># Windows</span><span>
-venv\Scripts\activate
-</span><span># Linux/Mac</span><span>
-</span><span>source</span><span> venv/bin/activate
-</span></span></code></div></div></pre>
+   ```
+   git clone https://github.com/IltonBJSilva/desafio-python-busca-dados.git
+   cd desafio-python-busca-dados
+   ```
+2. **Crie e ative um ambiente virtual:**
+   **Bash**
 
-3. Instale as dependências:
+   ```
+   python -m venv venv
+   # No Windows: venv\Scripts\activate
+   # No Linux/Mac: source venv/bin/activate
+   ```
+3. **Instale as dependências:**
+   **Bash**
 
-<pre class="overflow-visible!" data-start="1824" data-end="1867"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-bash"><span><span>pip install -r requirements.txt
-</span></span></code></div></div></pre>
+   ```
+   pip install -r requirements.txt
+   ```
+4. **Inicie a aplicação:**
+   **Bash**
 
-4. Configure o arquivo `.env` (opcional):
+   ```
+   python -m app.main
+   ```
 
-<pre class="overflow-visible!" data-start="1911" data-end="1954"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span><span>DATABASE_URL</span><span>=sqlite:///./desafio.db
-</span></span></code></div></div></pre>
-
-5. Inicie a aplicação:
-
-<pre class="overflow-visible!" data-start="1979" data-end="2009"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-bash"><span><span>python -m app.main
-</span></span></code></div></div></pre>
-
-* A aplicação vai rodar em `http://127.0.0.1:5000`.
+   A API estará disponível em `http://12-7.0.0.1:5000`.
 
 ---
 
-## 4️⃣ Endpoints
+## 5️⃣ Endpoints da API
 
-### 4.1 POST – Criar Documento
+### 5.1 POST /documentos
 
-**URL:** `/documentos`
+Cria um novo documento no banco de dados.
 
-**Método:** POST
+**Exemplo de JSON**
 
-**Descrição:** Cria um novo documento no banco de dados.
+**JSON**
 
-**Exemplo de JSON:**
+```
+{
+  "titulo": "Carros antigos em Porto Alegre",
+  "autor": "João Mecânico",
+  "conteudo": "Um encontro será realizado com carros antigos e clássicos na cidade de Porto Alegre.",
+  "data": "2025-01-15",
+  "latitude": "-30.0330",
+  "longitude": "-51.2300"
+}
+```
 
-<pre class="overflow-visible!" data-start="2243" data-end="2506"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-json"><span><span>{</span><span>
-  </span><span>"titulo"</span><span>:</span><span></span><span>"Carros antigos em Porto Alegre"</span><span>,</span><span>
-  </span><span>"autor"</span><span>:</span><span></span><span>"João Mecânico"</span><span>,</span><span>
-  </span><span>"conteudo"</span><span>:</span><span></span><span>"Um encontro será realizado com carros antigos e clássicos na cidade de Porto Alegre."</span><span>,</span><span>
-  </span><span>"data"</span><span>:</span><span></span><span>"2025-01-15"</span><span>,</span><span>
-  </span><span>"latitude"</span><span>:</span><span></span><span>-30.0330</span><span>,</span><span>
-  </span><span>"longitude"</span><span>:</span><span></span><span>-51.2300</span><span>
-</span><span>}</span><span>
-</span></span></code></div></div></pre>
+**Exemplo de Resposta (código 201 - Created):**
 
-**Exemplo de resposta:**
+**JSON**
 
-<pre class="overflow-visible!" data-start="2533" data-end="2807"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-json"><span><span>{</span><span>
-  </span><span>"id"</span><span>:</span><span></span><span>1</span><span>,</span><span>
-  </span><span>"titulo"</span><span>:</span><span></span><span>"Carros antigos em Porto Alegre"</span><span>,</span><span>
-  </span><span>"autor"</span><span>:</span><span></span><span>"João Mecânico"</span><span>,</span><span>
-  </span><span>"conteudo"</span><span>:</span><span></span><span>"Um encontro será realizado com carros antigos e clássicos na cidade de Porto Alegre."</span><span>,</span><span>
-  </span><span>"data"</span><span>:</span><span></span><span>"2025-01-15"</span><span>,</span><span>
-  </span><span>"latitude"</span><span>:</span><span></span><span>-30.0330</span><span>,</span><span>
-  </span><span>"longitude"</span><span>:</span><span></span><span>-51.2300</span><span>
-</span><span>}</span><span>
-</span></span></code></div></div></pre>
+```
+{
+  "id": 1,
+  "titulo": "Carros antigos em Porto Alegre",
+  "autor": "João Mecânico",
+  "conteudo": "Um encontro será realizado com carros antigos e clássicos na cidade de Porto Alegre.",
+  "data": "2025-01-15",
+  "latitude": -30.03,
+  "longitude": -51.23
+}
+```
 
-**Validações:**
+**Regras de Validação:**
 
-* `titulo` e `conteudo` obrigatórios.
-* `data` obrigatória, formato `"YYYY-MM-DD"`.
-* `autor`, `latitude` e `longitude` opcionais.
+* `titulo`: Obrigatório (string).
+* `conteudo`: Obrigatório (string).
+* `data`: Obrigatório, no formato `"YYYY-MM-DD"`.
+* `autor`, `latitude`, `longitude`: Opcionais.
 
----
+### 5.2 GET /documentos
 
-### 4.2 GET – Buscar Documentos
+Busca documentos com base em parâmetros de consulta.
 
-**URL:** `/documentos`
+**Parâmetros de Consulta (Query Parameters):**
 
-**Método:** GET
+* `palavraChave` (opcional): Uma palavra-chave para buscar no título, autor ou conteúdo.
+* `busca` (opcional): Uma frase completa para busca.
+* `latitude` e `longitude` (opcionais): Coordenadas para ordenar os resultados por proximidade.
 
-**Descrição:** Busca documentos por palavra-chave ou frase completa, podendo ordenar por proximidade geográfica.
+**Exemplo de Requisição:**
 
-**Query Parameters:**
+```
+http://127.0.0.1:5000/documentos?palavraChave=carros&latitude=-30.0300&longitude=-51.2290
+```
 
-* `palavraChave` (opcional se `busca` for usada) – Palavra que deve existir no título, autor ou conteúdo.
-* `busca` (opcional) – Permite busca por frases completas.
-* `latitude` e `longitude` (opcionais) – Ordenam os resultados pela distância do ponto fornecido.
+**Exemplo de Resposta (código 200 - OK):**
 
-**Exemplo de GET:**
+**JSON**
 
-<pre class="overflow-visible!" data-start="3463" data-end="3560"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span><span>http:</span><span>//127.0.0.1:5000/documentos?palavraChave=carros&latitude=-30.0300&longitude=-51.2290</span><span>
-</span></span></code></div></div></pre>
+```
+[
+  {
+    "id": 2,
+    "titulo": "Guia de bicicletas urbanas",
+    "autor": "Carlos Ciclista",
+    "conteudo": "Este guia foca em bicicletas, mas menciona brevemente carros como alternativa urbana.",
+    "data": "2025-03-10",
+    "latitude": -30.02,
+    "longitude": -51.22
+  },
+  {
+    "id": 1,
+    "titulo": "Carros antigos em Porto Alegre",
+    "autor": "João Mecânico",
+    "conteudo": "Um encontro será realizado com carros antigos e clássicos na cidade de Porto Alegre.",
+    "data": "2025-01-15",
+    "latitude": -30.0330,
+    "longitude": -51.2300
+  }
+]
+```
 
-**Exemplo de resposta ordenada por proximidade:**
+**Regras de Validação:**
 
-<pre class="overflow-visible!" data-start="3612" data-end="4189"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-json"><span><span>[</span><span>
-  </span><span>{</span><span>
-    </span><span>"id"</span><span>:</span><span></span><span>2</span><span>,</span><span>
-    </span><span>"titulo"</span><span>:</span><span></span><span>"Guia de bicicletas urbanas"</span><span>,</span><span>
-    </span><span>"autor"</span><span>:</span><span></span><span>"Carlos Ciclista"</span><span>,</span><span>
-    </span><span>"conteudo"</span><span>:</span><span></span><span>"Este guia foca em bicicletas, mas menciona brevemente carros como alternativa urbana."</span><span>,</span><span>
-    </span><span>"data"</span><span>:</span><span></span><span>"2025-03-10"</span><span>,</span><span>
-    </span><span>"latitude"</span><span>:</span><span></span><span>-30.0277</span><span>,</span><span>
-    </span><span>"longitude"</span><span>:</span><span></span><span>-51.2287</span><span>
-  </span><span>}</span><span>,</span><span>
-  </span><span>{</span><span>
-    </span><span>"id"</span><span>:</span><span></span><span>1</span><span>,</span><span>
-    </span><span>"titulo"</span><span>:</span><span></span><span>"Carros antigos em Porto Alegre"</span><span>,</span><span>
-    </span><span>"autor"</span><span>:</span><span></span><span>"João Mecânico"</span><span>,</span><span>
-    </span><span>"conteudo"</span><span>:</span><span></span><span>"Um encontro será realizado com carros antigos e clássicos na cidade de Porto Alegre."</span><span>,</span><span>
-    </span><span>"data"</span><span>:</span><span></span><span>"2025-01-15"</span><span>,</span><span>
-    </span><span>"latitude"</span><span>:</span><span></span><span>-30.0330</span><span>,</span><span>
-    </span><span>"longitude"</span><span>:</span><span></span><span>-51.2300</span><span>
-  </span><span>}</span><span>
-</span><span>]</span><span>
-</span></span></code></div></div></pre>
-
-**Validações:**
-
-* Pelo menos `palavraChave` ou `busca` devem ser fornecidos.
-* Se `latitude` ou `longitude` forem fornecidas, ambos devem existir para ordenar por proximidade.
-
----
-
-## 5️⃣ Estrutura de Modelos
-
-<pre class="overflow-visible!" data-start="4402" data-end="4793"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-python"><span><span>class</span><span></span><span>Document</span><span>(</span><span>Base</span><span>):
-    __tablename__ = </span><span>"documents"</span><span>
-    </span><span>id</span><span> = Column(Integer, primary_key=</span><span>True</span><span>, index=</span><span>True</span><span>)
-    titulo = Column(String(</span><span>255</span><span>), nullable=</span><span>False</span><span>)
-    autor = Column(String(</span><span>255</span><span>), nullable=</span><span>True</span><span>)
-    conteudo = Column(Text, nullable=</span><span>False</span><span>)
-    data = Column(Date, nullable=</span><span>False</span><span>)
-    latitude = Column(Float, nullable=</span><span>True</span><span>)
-    longitude = Column(Float, nullable=</span><span>True</span><span>)
-</span></span></code></div></div></pre>
+* É obrigatório fornecer `palavraChave` ou `busca`.
+* Se `latitude` for fornecida, `longitude` também deve ser, para que a ordenação por proximidade funcione.
 
 ---
 
-## 6️⃣ Função de Distância (`geo_utils.py`)
+## 6️⃣ Modelo de Dados
 
-<pre class="overflow-visible!" data-start="4845" data-end="5258"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-python"><span><span>import</span><span> math
+A tabela `documents` no banco de dados é definida com a seguinte estrutura:
 
-</span><span>def</span><span></span><span>distance_km</span><span>(</span><span>lat1, lon1, lat2, lon2</span><span>):
-    </span><span># Fórmula de Haversine</span><span>
-    R = </span><span>6371</span><span></span><span># Raio da Terra</span><span>
-    phi1 = math.radians(lat1)
-    phi2 = math.radians(lat2)
-    dphi = math.radians(lat2 - lat1)
-    dlambda = math.radians(lon2 - lon1)
+**Python**
 
-    a = math.sin(dphi/</span><span>2</span><span>)**</span><span>2</span><span> + math.cos(phi1)*math.cos(phi2)*math.sin(dlambda/</span><span>2</span><span>)**</span><span>2</span><span>
-    c = </span><span>2</span><span>*math.atan2(math.sqrt(a), math.sqrt(</span><span>1</span><span>-a))
-    </span><span>return</span><span> R * c
-</span></span></code></div></div></pre>
+```
+class Document(Base):
+    __tablename__ = "documents"
+    id = Column(Integer, primary_key=True, index=True)
+    titulo = Column(String(255), nullable=False)
+    autor = Column(String(255), nullable=True)
+    conteudo = Column(Text, nullable=False)
+    data = Column(Date, nullable=False)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+```
 
----
+## 7️⃣ Testes
 
-## 7️⃣ Observações
+O projeto conta com uma suíte de testes robusta para garantir a qualidade e a estabilidade do código. O relatório de testes (`reports/test_report.html`) indica que  **todos os 13 testes passaram com sucesso** .
 
-* Banco de dados inicial: **SQLite** (mais fácil para testes), mas pode ser adaptado para  **PostgreSQL** ,  **MySQL** , etc.
-* Todos os endpoints retornam JSON.
-* Código organizado em  **MVC leve** : routes → services → models → schemas.
-* Mensagens de erro padronizadas via JSON.
+Os testes implementados cobrem as seguintes áreas:
 
+* **Testes Funcionais:** Validação das funcionalidades de criação (`create_document`) e busca (`search_documents`) de documentos.
+* **Testes de Segurança:** Proteção contra tentativas de SQL Injection.
+* **Testes de Performance:** Validação de inserções em lote e busca em grandes volumes de dados.
+* **Testes de Resiliência:** Garantia de que a aplicação trata dados inválidos sem falhar.
+* **Testes de Ordenação Geográfica:** Validação da correta ordenação de documentos por proximidade.
+* **Testes de Busca  *Case-Insensitive* :** A busca funciona independentemente de letras maiúsculas ou minúsculas.
 
-## Testes implementados
-
-Durante o desenvolvimento deste projeto, foram implementados testes avançados para demonstrar robustez, segurança e performance:
-
-- **Testes funcionais**: validação das funções de criação (`create_document`) e busca (`search_documents`) de documentos.
-- **Testes de segurança**: proteção contra SQL Injection.
-- **Testes de performance**: validação de inserções em lote e busca rápida em grandes volumes de dados.
-- **Testes de resiliência e tratamento de erros**: garantia de que inputs inválidos não quebram a aplicação.
-- **Testes de ordenação geográfica**: validação da ordenação correta de documentos próximos a coordenadas fornecidas.
-- **Testes case-insensitive**: busca funciona independentemente de maiúsculas/minúsculas.
-
-✅ Estes testes demonstram domínio de boas práticas de programação, organização, arquitetura e atenção à qualidade do código.
+✅ A implementação desses testes demonstra um compromisso com as boas práticas de desenvolvimento, arquitetura de software e qualidade de código.
