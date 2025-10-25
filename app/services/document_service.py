@@ -14,9 +14,6 @@ def create_document(data_dict):
 
     Returns:
         Document: Objeto Document recém-criado e persistido no banco.
-
-    Raises:
-        sqlalchemy.exc.SQLAlchemyError: Se houver erro na operação de banco de dados.
     """
     db = SessionLocal()
     try:
@@ -39,13 +36,11 @@ def search_documents(palavraChave=None, busca=None, latitude=None, longitude=Non
         busca (str, opcional): Texto completo para busca.
         latitude (float, opcional): Latitude para cálculo de proximidade.
         longitude (float, opcional): Longitude para cálculo de proximidade.
+        debug (bool, opcional): Ativa prints de debug para SQL e resultados.
 
     Returns:
         list[Document]: Lista de objetos Document que correspondem à busca,
                         ordenados pela proximidade geográfica se latitude e longitude forem fornecidas.
-
-    Exemplo:
-        search_documents(busca="carros antigos", latitude=-30.03, longitude=-51.23)
     """
     db = SessionLocal()
     try:

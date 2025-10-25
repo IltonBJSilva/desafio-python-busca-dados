@@ -5,6 +5,18 @@ from app.database.connection import Base
 
 #Criar uma classe para definir os dados dentro de uma tabela do banco
 class Document(Base):
+    """
+    Representa um documento armazenado no banco de dados.
+
+    Attributes:
+        id (int): Identificador único do documento.
+        titulo (str): Título do documento. Obrigatório.
+        autor (str): Nome do autor do documento. Opcional.
+        conteudo (str): Conteúdo do documento. Obrigatório.
+        data (date): Data de criação do documento. Obrigatória.
+        latitude (float): Latitude associada ao documento. Opcional.
+        longitude (float): Longitude associada ao documento. Opcional.
+    """
     __tablename__ = "documents"
     #define estrutura da tabela, tipos de dados e constraints.
     id = Column(Integer, primary_key=True, index=True)

@@ -1,3 +1,10 @@
+"""
+Módulo de rotas para documentos.
+
+Fornece endpoints para:
+- Criar documentos (POST)
+- Buscar documentos (GET)
+"""
 from flask import Blueprint, request, jsonify
 from app.schemas.document_schema import DocumentSchema
 from app.services.document_service import create_document, search_documents
@@ -15,6 +22,23 @@ schema_many = DocumentSchema(many=True)
 # ========================
 @bp.route("", methods=["POST"])
 def create_doc():
+    """
+    Cria um novo documento no banco de dados.
+
+    Espera um JSON com:
+    - titulo (str, obrigatório)
+    - autor (str, opcional)
+    - conteudo (str, obrigatório)
+    - data (str, obrigatório, formato YYYY-MM-DD)
+    - latitude (float, opcional)
+    - longitude (float, opcional)
+
+    Valida o payload, converte a data e cria o documento usando o service.
+
+    Retorna:
+        JSON do documento criado e status 201
+        ou JSON com erros e status 400 se houver validação
+    """
     payload = request.get_json()
     errors = schema.validate(payload)
     if errors:
@@ -29,6 +53,23 @@ def create_doc():
 # ========================
 @bp.route("", methods=["GET"])
 def search_doc():
+    """
+    Busca documentos no banco de dados.
+
+    Parâmetros de query:
+    - palavraChave (str, opcional)
+    - busca (str, opcional)
+    - latitude (float, opcional)
+    - longitude (float, opcional)
+
+    Regras:
+    - Pelo menos 'palavraChave' ou 'busca' devem ser fornecidos
+    - Se latitude e longitude forem fornecidas, os resultados são ordenados por proximidade
+
+    Retorna:
+        JSON com a lista de documentos encontrados e status 200
+        ou JSON com erro e status 400 se os parâmetros obrigatórios não forem fornecidos
+    """
     palavra_chave = request.args.get("palavraChave")
     busca = request.args.get("busca")
     lat_user = request.args.get("latitude", type=float)
