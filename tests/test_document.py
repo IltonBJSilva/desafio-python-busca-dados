@@ -61,7 +61,13 @@ def test_search_by_autor(db, sample_document):
     assert len(results) > 0
     assert any("João Mecânico" in d.autor for d in results)
 
+# ------------------------
+# Teste busca sem resultados
+# ------------------------
 
+def test_search_no_results(db):
+    results = search_documents(busca="não existente")
+    assert len(results) == 0
 
 
 
